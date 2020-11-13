@@ -9,7 +9,7 @@ import io.restassured.http.Method;
 
 public class TC01_Get_SearchByCountryCode extends BaseTest{	
 	public static String countryCode;
-	
+
 	@Test
 	@SuppressWarnings("resource")
 	public static void searchByCountrycodeTest() {
@@ -17,12 +17,15 @@ public class TC01_Get_SearchByCountryCode extends BaseTest{
 		logger.info("***********Started TC001_SearchByCountryCode************");
 		try {
 			do {
-				System.out.println("1.col \n 2.no \n 3.ee \n 4.Exit");
+				System.out.println("1.col\n2.no \n3.ee \n4.Exit");
 				System.out.println("Enter your choice of country code: ");
 				choice = -1;
 				Scanner sc = new Scanner(System.in);
-				if(sc.hasNextInt()) {
-					choice = sc.nextInt();
+				if(sc.hasNextInt() || sc.hasNextFloat()) {
+					String value = sc.nextLine();
+					float floatValue = Float.parseFloat(value);
+					choice = (int)floatValue;
+					
 					switch(choice) {
 					case 1: 
 						countryCode = "col";
@@ -53,7 +56,6 @@ public class TC01_Get_SearchByCountryCode extends BaseTest{
 				}
 			}while(choice != 4);
 		}catch(Exception e) {
-			System.out.println("Handle the Exception.");
 			e.printStackTrace();
 		}
 	}
@@ -62,7 +64,7 @@ public class TC01_Get_SearchByCountryCode extends BaseTest{
 		RestAssured.baseURI = "https://restcountries.eu/rest/v2";
 		httpRequest = RestAssured.given();		
 		response = httpRequest.request(Method.GET, "/alpha/"+code);
-		
+
 		//Verify the response status code
 		logger.info("Checking Response Status code...");
 		Assert.assertEquals(response.getStatusCode(), 200, "Actual Status code is not matched with Expected.");
@@ -82,7 +84,7 @@ public class TC01_Get_SearchByCountryCode extends BaseTest{
 			expectedCapital = "Tallinn";
 		}
 		Assert.assertEquals(actualCapital, expectedCapital);
-		
+
 		//Verify the header content-type
 		logger.info("checking header Content-Type...");
 		String contentType = response.header("Content-Type");
